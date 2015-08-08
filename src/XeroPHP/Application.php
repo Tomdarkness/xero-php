@@ -17,7 +17,8 @@ abstract class Application {
             'core_version'    => '2.0',
             'payroll_version' => '1.0',
             'file_version'    => '1.0',
-            'model_namespace' => '\\XeroPHP\\Models'
+            'model_namespace' => '\\XeroPHP\\Models',
+            '4dp' => false
         ),
         //OAuth config
         'oauth' => array(
@@ -187,6 +188,10 @@ abstract class Application {
             $data = array($object::getRootNodeName() => $object->toStringArray());
             $url = new URL($this, $uri);
             $request = new Request($this, $url, $method);
+
+            if ($this->config['xero']['4dp']) {
+                $request->setParameter('unitdp', 4);
+            }
 
             $request->setBody(Helpers::arrayToXML($data))->send();
             $response = $request->getResponse();
